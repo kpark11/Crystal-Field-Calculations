@@ -836,38 +836,50 @@ class LS():
 
         return theta
     
-    def Diag(self,H,printfunction=True):
+    def Diag(self,H,printfunction=False,SaveFig=False):
         E = np.linalg.eigh(H)
         E_val = E[0]
         E_state = E[1].T
 
         E_excitation = E_val-E_val[0]
         
-        print(E_val)
-        print(E_excitation)
+        if printfunction == False:
+            pass
+        else:
+            print(E_val)
+            print(E_excitation)
+        
+        
+        if printfunction == False:
+            pass
+        else:
+            fig = plt.figure()
             
-        fig = plt.figure()
+            ax1 = fig.add_subplot(221)
+            ax1.eventplot(E_val,orientation='vertical',linelength=0.05,linestyles='solid',colors='r')
+            ax1.tick_params(axis='x',which='both',bottom=False,top=False)
+            ax1.set_xlabel('Crystal Field Splitting')
+            ax1.set_ylabel('Energy (meV)')
+            ax1.set_xticklabels('')
+            ax1.set_title('Point Charge Model')
+            ax1.set_xlim([0.95,1.05])
             
-        ax1 = fig.add_subplot(221)
-        ax1.eventplot(E_val,orientation='vertical',linelength=0.05,linestyles='solid',colors='r')
-        ax1.tick_params(axis='x',which='both',bottom=False,top=False)
-        ax1.set_xlabel('Crystal Field Splitting')
-        ax1.set_ylabel('Energy (meV)')
-        ax1.set_xticklabels('')
-        ax1.set_title('Point Charge Model')
-        ax1.set_xlim([0.95,1.05])
-            
-        ax2 = fig.add_subplot(222)
-        ax2.eventplot(E_excitation,orientation='horizontal',linelength=0.05,linestyles='solid',colors='b')
-        ax2.tick_params(axis='y',which='both',bottom=False,top=False)
-        ax2.set_xlabel('Energy (meV)')
-        ax2.set_ylabel('Arb. Units')
-        ax2.set_yticklabels('')
-        ax2.set_yticks([])
-        ax2.set_title('Crystal Field excitations')
-        ax2.set_ylim([0.95,1.05])
-            
-        plt.show()
+            ax2 = fig.add_subplot(222)
+            ax2.eventplot(E_excitation,orientation='horizontal',linelength=0.05,linestyles='solid',colors='b')
+            ax2.tick_params(axis='y',which='both',bottom=False,top=False)
+            ax2.set_xlabel('Energy (meV)')
+            ax2.set_ylabel('Arb. Units')
+            ax2.set_yticklabels('')
+            ax2.set_yticks([])
+            ax2.set_title('Crystal Field excitations')
+            ax2.set_ylim([0.95,1.05])
+        if SaveFig == False:
+            pass
+        else:
+            plt.savefig("Crystal_Field.pdf")
+            plt.show()
+        
+        
         
         return E_val,E_excitation,E_state
     
@@ -890,6 +902,7 @@ class LS():
         for k in range(Fields[k]):
             for k1 in range(elements.LS_degeneracy):
                 plt.plot(E_excitation[k][k1],Fields[k],'|',markersize=8)
+                
         plt.title(r'Zeeman Splitting (H $\Vert$ c)')
         plt.xlabel('Energy (meV)')
         plt.ylabel('Magnetic Field (T)')
@@ -916,6 +929,7 @@ class LS():
         for k in range(Fields[k]):
             for k1 in range(elements.LS_degeneracy):
                 plt.plot(E_excitation[k][k1],Fields[k],'|',markersize=8)
+                
         plt.title(r'Zeeman Splitting (H $\bot$ c)')
         plt.xlabel('Energy (meV)')
         plt.ylabel('Magnetic Field (T)')
@@ -942,6 +956,7 @@ class LS():
         for k in range(Fields[k]):
             for k1 in range(elements.LS_degeneracy):
                 plt.plot(E_excitation[k][k1],Fields[k],'|',markersize=8)
+                
         plt.title(r'Zeeman Splitting (H $\bot$ c)')
         plt.xlabel('Energy (meV)')
         plt.ylabel('Magnetic Field (T)')
