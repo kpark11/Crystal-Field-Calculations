@@ -883,7 +883,7 @@ class LS():
         
         return E_val,E_excitation,E_state
     
-    def Zeeman_z(self,L,S,H,Fields):
+    def Zeeman_z(self,L,S,H,Fields,savefunction=False):
         print('--------- Applying Magnetic Field inducing Zeeman splitting in Z-axis --------')
         elements = LS(L,S)
         Fields = np.array(range(0,Fields+2,1))
@@ -906,11 +906,15 @@ class LS():
         plt.title(r'Zeeman Splitting (H $\Vert$ c)')
         plt.xlabel('Energy (meV)')
         plt.ylabel('Magnetic Field (T)')
-        plt.show()
+        if savefunction == False:
+            pass
+        else:
+            plt.savefig("Zeeman_z.pdf")
+        plt.show()    
         
         return E_val
     
-    def Zeeman_x(self,L,S,H,Fields):
+    def Zeeman_x(self,L,S,H,Fields,savefunction=False):
         print('--------- Applying Magnetic Field inducing Zeeman splitting in X-axis --------')
         elements = LS(L,S)
         Fields = np.array(range(0,Fields+2,1))
@@ -933,11 +937,15 @@ class LS():
         plt.title(r'Zeeman Splitting (H $\bot$ c)')
         plt.xlabel('Energy (meV)')
         plt.ylabel('Magnetic Field (T)')
-        plt.show()
+        if savefunction == False:
+            pass
+        else:
+            plt.savefig("Zeeman_x.pdf")
+        plt.show() 
         
         return E_val
     
-    def Zeeman_y(self,L,S,H,Fields):
+    def Zeeman_y(self,L,S,H,Fields,savefunction=False):
         print('--------- Applying Magnetic Field inducing Zeeman splitting in Y-axis --------')
         elements = LS(L,S)
         Fields = np.array(range(0,Fields+2,1))
@@ -960,7 +968,11 @@ class LS():
         plt.title(r'Zeeman Splitting (H $\bot$ c)')
         plt.xlabel('Energy (meV)')
         plt.ylabel('Magnetic Field (T)')
-        plt.show()
+        if savefunction == False:
+            pass
+        else:
+            plt.savefig("Zeeman_y.pdf")
+        plt.show() 
         
         return E_val
     
