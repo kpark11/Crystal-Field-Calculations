@@ -28,10 +28,10 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title = 'Crystal Field Calculation'
-        self.left = 110
-        self.top = 110
-        self.width = 1400
-        self.height = 840
+        self.left = 50
+        self.top = 50
+        self.width = 1800
+        self.height = 900
         self.initUI()
     
     def initUI(self):
@@ -295,11 +295,11 @@ class App(QMainWindow):
         
         # B parameters label
         self.B_parameters_label = QLabel('B parameters',self)
-        self.B_parameters_label .move(400,20)
+        self.B_parameters_label .move(300,20)
         self.B_parameters_label .resize(200,40)
         # Create a table for B parameters
         self.B_parameters = QTableWidget(self)
-        self.B_parameters.move(400 , 50)
+        self.B_parameters.move(300 , 50)
         self.B_parameters.resize(300,400)
         self.B_parameters.setRowCount(8)
         self.B_parameters.setColumnCount(2)
@@ -323,12 +323,12 @@ class App(QMainWindow):
         
         
         # Energies label
-        self.Energies_label = QLabel('Energies',self)
-        self.Energies_label .move(800,20)
+        self.Energies_label = QLabel('Energies (meV)',self)
+        self.Energies_label .move(650,20)
         self.Energies_label .resize(100,40)
         # Create a table for Energies
         self.Energies = QTableWidget(self)
-        self.Energies.move(800 , 50)
+        self.Energies.move(650 , 50)
         self.Energies.resize(200,400)
         self.Energies.setRowCount(1)
         self.Energies.setColumnCount(1)
@@ -342,12 +342,12 @@ class App(QMainWindow):
         
         
         # Energies + SO label
-        self.Energies_SO_label = QLabel('Energies + SO',self)
-        self.Energies_SO_label .move(1100,20)
-        self.Energies_SO_label .resize(100,40)
+        self.Energies_SO_label = QLabel('Energies + SO (meV)',self)
+        self.Energies_SO_label .move(900,20)
+        self.Energies_SO_label .resize(150,40)
         # Create a table for Energies
         self.Energies_SO = QTableWidget(self)
-        self.Energies_SO.move(1100 , 50)
+        self.Energies_SO.move(900 , 50)
         self.Energies_SO.resize(200,400)
         self.Energies_SO.setRowCount(1)
         self.Energies_SO.setColumnCount(1)
@@ -382,7 +382,7 @@ class App(QMainWindow):
         S = int(S_text)
         Z = int(Z_text)
         calc = cef.LS(L,S)
-        Degeneracy = L*S
+        Degeneracy = (2*L+1)*(2*S+1)
         
         O20 = calc.Olm(L,S,2,0)
         O21 = calc.Olm(L,S,2,1)
@@ -393,28 +393,39 @@ class App(QMainWindow):
         O43 = calc.Olm(L,S,4,3)
         O44 = calc.Olm(L,S,4,4)
         
-        ion_center = np.array([float(self.Ion_position_x.text()),    float(self.Ion_position_y.text()),    float(self.Ion_position_z.text())])
-        O1 = np.array([float(self.Li1_x.text()),    float(self.Li1_y.text()),   float(self.Li1_z.text())])
-        O2 = np.array([float(self.Li2_x.text()),    float(self.Li2_y.text()),   float(self.Li2_z.text())])
-        O3 = np.array([float(self.Li3_x.text()),   float(self.Li3_y.text()),   float(self.Li3_z.text())])
-        O4 = np.array([float(self.Li4_x.text()),    float(self.Li4_y.text()),    float(self.Li4_z.text())])
-        O5 = np.array([float(self.Li5_x.text()),    float(self.Li5_y.text()),   float(self.Li5_z.text())])
-        O6 = np.array([float(self.Li6_x.text()),    float(self.Li6_y.text()),    float(self.Li6_z.text())])
-        O7 = np.array([float(self.Li7_x.text()),    float(self.Li7_y.text()),  float(self.Li7_z.text())])
-        O8 = np.array([float(self.Li8_x.text()),    float(self.Li8_y.text()), float(self.Li8_z.text())])
+        d = np.zeros((9,3))
         
+        d[0] = np.array([float(self.Ion_position_x.text()),    float(self.Ion_position_y.text()),    float(self.Ion_position_z.text())])
+        d[1] = np.array([float(self.Li1_x.text()),    float(self.Li1_y.text()),   float(self.Li1_z.text())])
+        d[2] = np.array([float(self.Li2_x.text()),    float(self.Li2_y.text()),   float(self.Li2_z.text())])
+        d[3] = np.array([float(self.Li3_x.text()),   float(self.Li3_y.text()),   float(self.Li3_z.text())])
+        d[4] = np.array([float(self.Li4_x.text()),    float(self.Li4_y.text()),    float(self.Li4_z.text())])
+        d[5] = np.array([float(self.Li5_x.text()),    float(self.Li5_y.text()),   float(self.Li5_z.text())])
+        d[6] = np.array([float(self.Li6_x.text()),    float(self.Li6_y.text()),    float(self.Li6_z.text())])
+        d[7] = np.array([float(self.Li7_x.text()),    float(self.Li7_y.text()),  float(self.Li7_z.text())])
+        d[8] = np.array([float(self.Li8_x.text()),    float(self.Li8_y.text()), float(self.Li8_z.text())])
+
+        O1_d = d[1] - d[0]
+        O2_d = d[2] - d[0]
+        O3_d = d[3] - d[0]
+        O4_d = d[4] - d[0]
+        O5_d = d[5] - d[0]
+        O6_d = d[6] - d[0]
+        O7_d = d[7] - d[0]
+        O8_d = d[8] - d[0]
         
-        O1_d = O1 - ion_center
-        O2_d = O2 - ion_center
-        O3_d = O3 - ion_center
-        O4_d = O4 - ion_center
-        O5_d = O5 - ion_center
-        O6_d = O6 - ion_center
-        O7_d = O7 - ion_center
-        O8_d = O8 - ion_center
+        positions = np.array([O1_d,O2_d,O3_d,O4_d,O5_d,O6_d,O7_d,O8_d])
         
-        d = np.array([O1_d,O2_d,O3_d,O4_d,O5_d,O6_d,O7_d,O8_d])
-        B = calc.PC(ion,L,S,d,Z)
+        k = 1
+        for k in range(len(d)):
+            if d[k][0] and d[k][1] and d[k][2] == 0:
+                pass
+            else:
+                d = np.delete(positions,k,0)
+        
+        positions = np.delete(positions,0,0)
+        B = calc.PC(ion,L,S,positions,Z)
+        
         
         QMessageBox.question(self, 'Crystal Field', 'Results are down below' +\
         '\n B20: ' + str(B[0]) +\
@@ -438,20 +449,22 @@ class App(QMainWindow):
         
         Hcf = B[0]*O20 + B[1]*O21 + B[2]*O22 + B[3]*O40 + B[4]*O41 + B[5]*O42 + B[6]*O43 + B[7]*O44
         Ecf_val,Ecf_val_excitation,H_cf_vt = calc.Diag(Hcf,printfunction=True)
-        SO_matrix = calc.SO(ion,L,S,self.SO)
+        SO_matrix = calc.SO(ion,L,S,float(SO_text))
         Hcf_so = Hcf + SO_matrix
         Ecf_so_val,Ecf_so_val_excitation,H_cf_so_vt = calc.Diag(Hcf_so,printfunction=True)
         
-        self.Energies.setRowCount(len(Degeneracy))
-        self.Energies_SO.setRowCount(len(Degeneracy))
         
-        for k in range(len(Degeneracy)):
+        for k in range(Degeneracy):
             self.Energies.setItem(k,0, QTableWidgetItem(str(Ecf_val_excitation[k])))
+            self.Energies.insertRow(self.Energies.rowCount())
+
             self.Energies_SO.setItem(k,0, QTableWidgetItem(str(Ecf_so_val_excitation[k])))
+            self.Energies_SO.insertRow(self.Energies_SO.rowCount())
+        
+        self.Energies.removeRow(Degeneracy)
+        self.Energies_SO.removeRow(Degeneracy)
 
         
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
