@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtWidgets import QVBoxLayout
-
+from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPalette
 from PyQt5 import QtCore
@@ -513,9 +513,9 @@ if __name__ == '__main__':
     
     # setting the colors
     palette = QPalette()
-    #palette.setColor(QPalette.Window, Qt.lightgray)
-    #palette.setColor(QPalette.ButtonText, Qt.red)
-    #palette.setColor(QPalette.WindowText, Qt.darkGreen)
+    palette.setColor(QPalette.Window, Qt.gray)
+    palette.setColor(QPalette.ButtonText, Qt.red)
+    palette.setColor(QPalette.WindowText, Qt.blue)
     app.setPalette(palette)
     ex = App()
 
