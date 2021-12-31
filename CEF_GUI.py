@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtWidgets import QVBoxLayout
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPalette
@@ -356,14 +357,6 @@ class App(QMainWindow):
         self.Energies_SO.verticalHeader().setStretchLastSection(True)
         self.Energies_SO.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
         
-
-        # plotting the crystal field levels
-        #self.m_chartview = Qt.QChart()
-        #self.m_chartview.chart().setTheme(QtCharts.QChart.ChartThemeQt)
-        #self.m_chartview.setMinimumWidth(400)
-        
-        
-        
         
         
         
@@ -473,9 +466,7 @@ class App(QMainWindow):
         
         self.Energies.removeRow(Degeneracy)
         self.Energies_SO.removeRow(Degeneracy)
-
-
-
+        
 
         
         """    
@@ -513,9 +504,9 @@ if __name__ == '__main__':
     
     # setting the colors
     palette = QPalette()
-    palette.setColor(QPalette.Window, Qt.gray)
+    palette.setColor(QPalette.Window, Qt.lightGray)
     palette.setColor(QPalette.ButtonText, Qt.red)
-    palette.setColor(QPalette.WindowText, Qt.blue)
+    palette.setColor(QPalette.WindowText, Qt.darkBlue)
     app.setPalette(palette)
     ex = App()
 
