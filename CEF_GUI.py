@@ -15,15 +15,16 @@ from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtChart import QChart, QChartView
+
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPalette
 from PyQt5 import QtCore
 import sys
 import numpy as np
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-import matplotlib.pyplot as plt
+#from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+#from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+#import matplotlib.pyplot as plt
+
 
 
 
@@ -357,9 +358,9 @@ class App(QMainWindow):
         
 
         # plotting the crystal field levels
-        self.m_chartview = QtCharts.QChartView()
-        self.m_chartview.chart().setTheme(QtCharts.QChart.ChartThemeQt)
-        self.m_chartview.setMinimumWidth(400)
+        #self.m_chartview = Qt.QChart()
+        #self.m_chartview.chart().setTheme(QtCharts.QChart.ChartThemeQt)
+        #self.m_chartview.setMinimumWidth(400)
         
         
         
@@ -377,7 +378,7 @@ class App(QMainWindow):
         
         
         
-        
+        self.show()
         
 
     @pyqtSlot()
@@ -477,7 +478,7 @@ class App(QMainWindow):
 
 
         
-            
+        """    
         ax1 = self.fig.add_subplot(221)
         ax1.eventplot(self.Ecf_val_excitation,orientation='horizontal',linelength=0.05,linestyles='solid',colors='r')
         ax1.tick_params(axis='x',which='both',bottom=False,top=False)
@@ -496,7 +497,7 @@ class App(QMainWindow):
         ax2.set_yticks([])
         ax2.set_title('Crystal Field excitations')
         ax2.set_ylim([0.95,1.05])
-
+        """
 
 
 
@@ -512,12 +513,12 @@ if __name__ == '__main__':
     
     # setting the colors
     palette = QPalette()
-    palette.setColor(QPalette.Window, Qt.lightGray)
-    palette.setColor(QPalette.ButtonText, Qt.red)
-    palette.setColor(QPalette.WindowText, Qt.darkGreen)
+    #palette.setColor(QPalette.Window, Qt.lightgray)
+    #palette.setColor(QPalette.ButtonText, Qt.red)
+    #palette.setColor(QPalette.WindowText, Qt.darkGreen)
     app.setPalette(palette)
     ex = App()
-    
+
     sys.exit(app.exec_())
 
 
