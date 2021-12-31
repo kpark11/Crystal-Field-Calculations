@@ -14,11 +14,16 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtChart import QChart, QChartView
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPalette
+from PyQt5 import QtCore
 import sys
 import numpy as np
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.pyplot as plt
 
 
 
@@ -279,17 +284,8 @@ class App(QMainWindow):
         self.Li8_z.move(220, 560)
         self.Li8_z.resize(40,40)
         
-        
-        
-        
-        
-        # Create a button in the window
-        self.calculate = QPushButton('Calculate', self)
-        self.calculate.move(120,620)
 
-        
-        # connect button to function on_click
-        self.calculate.clicked.connect(self.on_click)
+
         
         
         
@@ -359,9 +355,28 @@ class App(QMainWindow):
         self.Energies_SO.verticalHeader().setStretchLastSection(True)
         self.Energies_SO.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
         
+
+        # plotting the crystal field levels
+        self.m_chartview = QtCharts.QChartView()
+        self.m_chartview.chart().setTheme(QtCharts.QChart.ChartThemeQt)
+        self.m_chartview.setMinimumWidth(400)
         
         
-        self.show()
+        
+        
+        
+        
+        
+        
+        # Just some button to start the calculation
+        self.button = QPushButton('Calculate', self)
+        # adding action to the button
+        self.button.clicked.connect(self.on_click)
+        self.button.move(120,620)
+        self.button.resize(150,50)
+        
+        
+        
         
         
 
@@ -394,6 +409,7 @@ class App(QMainWindow):
         O44 = calc.Olm(L,S,4,4)
         
         d = np.zeros((9,3))
+        positions = [[0,0,0]]
         
         d[0] = np.array([float(self.Ion_position_x.text()),    float(self.Ion_position_y.text()),    float(self.Ion_position_z.text())])
         d[1] = np.array([float(self.Li1_x.text()),    float(self.Li1_y.text()),   float(self.Li1_z.text())])
@@ -405,25 +421,15 @@ class App(QMainWindow):
         d[7] = np.array([float(self.Li7_x.text()),    float(self.Li7_y.text()),  float(self.Li7_z.text())])
         d[8] = np.array([float(self.Li8_x.text()),    float(self.Li8_y.text()), float(self.Li8_z.text())])
 
-        O1_d = d[1] - d[0]
-        O2_d = d[2] - d[0]
-        O3_d = d[3] - d[0]
-        O4_d = d[4] - d[0]
-        O5_d = d[5] - d[0]
-        O6_d = d[6] - d[0]
-        O7_d = d[7] - d[0]
-        O8_d = d[8] - d[0]
-        
-        positions = np.array([O1_d,O2_d,O3_d,O4_d,O5_d,O6_d,O7_d,O8_d])
-        
-        k = 1
-        for k in range(len(d)):
-            if d[k][0] and d[k][1] and d[k][2] == 0:
+        for k in range(8):
+            if d[k+1][0] == 0 and d[k+1][1] == 0 and d[k+1][2] == 0:
                 pass
             else:
-                d = np.delete(positions,k,0)
-        
+                d[k+1] = d[k+1] - d[0]
+                positions = np.vstack((positions,np.array([d[k+1]])))
         positions = np.delete(positions,0,0)
+        
+        
         B = calc.PC(ion,L,S,positions,Z)
         
         
@@ -448,24 +454,59 @@ class App(QMainWindow):
 
         
         Hcf = B[0]*O20 + B[1]*O21 + B[2]*O22 + B[3]*O40 + B[4]*O41 + B[5]*O42 + B[6]*O43 + B[7]*O44
-        Ecf_val,Ecf_val_excitation,H_cf_vt = calc.Diag(Hcf,printfunction=True)
-        SO_matrix = calc.SO(ion,L,S,float(SO_text))
+        self.Ecf_val,self.Ecf_val_excitation,self.H_cf_vt = calc.Diag(Hcf,printfunction=True)
+        if SO_text == '' or int(SO_text) == 0:
+            SO_matrix = calc.SO(ion,L,S)
+        else:
+            SO_matrix = calc.SO(ion,L,S,float(SO_text))
         Hcf_so = Hcf + SO_matrix
-        Ecf_so_val,Ecf_so_val_excitation,H_cf_so_vt = calc.Diag(Hcf_so,printfunction=True)
+        self.Ecf_so_val,self.Ecf_so_val_excitation,H_cf_so_vt = calc.Diag(Hcf_so,printfunction=True)
         
         
         for k in range(Degeneracy):
-            self.Energies.setItem(k,0, QTableWidgetItem(str(Ecf_val_excitation[k])))
+            self.Energies.setItem(k,0, QTableWidgetItem(str(self.Ecf_val_excitation[k])))
             self.Energies.insertRow(self.Energies.rowCount())
 
-            self.Energies_SO.setItem(k,0, QTableWidgetItem(str(Ecf_so_val_excitation[k])))
+            self.Energies_SO.setItem(k,0, QTableWidgetItem(str(self.Ecf_so_val_excitation[k])))
             self.Energies_SO.insertRow(self.Energies_SO.rowCount())
         
         self.Energies.removeRow(Degeneracy)
         self.Energies_SO.removeRow(Degeneracy)
 
-        
 
+
+
+        
+            
+        ax1 = self.fig.add_subplot(221)
+        ax1.eventplot(self.Ecf_val_excitation,orientation='horizontal',linelength=0.05,linestyles='solid',colors='r')
+        ax1.tick_params(axis='x',which='both',bottom=False,top=False)
+        ax1.set_xlabel('Crystal Field Splitting')
+        ax1.set_ylabel('Energy (meV)')
+        ax1.set_xticklabels('')
+        ax1.set_title('Point Charge Model')
+        ax1.set_xlim([0.95,1.05])
+        
+        ax2 = self.fig.add_subplot(222)
+        ax2.eventplot(self.Ecf_so_val_excitation,orientation='horizontal',linelength=0.05,linestyles='solid',colors='b')
+        ax2.tick_params(axis='y',which='both',bottom=False,top=False)
+        ax2.set_xlabel('Energy (meV)')
+        ax2.set_ylabel('Arb. Units')
+        ax2.set_yticklabels('')
+        ax2.set_yticks([])
+        ax2.set_title('Crystal Field excitations')
+        ax2.set_ylim([0.95,1.05])
+
+
+
+
+
+
+
+
+
+
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     
