@@ -16,15 +16,14 @@ from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtWidgets import QVBoxLayout
 
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPalette
 from PyQt5 import QtCore
 import sys
 import numpy as np
-#from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-#import matplotlib.pyplot as plt
+
 
 
 
@@ -358,7 +357,8 @@ class App(QMainWindow):
         self.Energies_SO.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
         
         
-        
+        #self.graphWidget = pg.PlotWidget()
+        #self.setCentralWidget(self.graphWidget)
         
         
         
@@ -384,7 +384,6 @@ class App(QMainWindow):
         QMessageBox.question(self, 'Crystal Field', "You typed: ion = " + ion_text +\
         ", L = " + L_text + ", S = " + S_text + ", Z = " + Z_text + ", SO = " +\
         SO_text, QMessageBox.Ok, QMessageBox.Ok)
-        #self.ion.setText("")
         
         ion = ion_text
         L = int(L_text)
@@ -467,9 +466,14 @@ class App(QMainWindow):
         self.Energies.removeRow(Degeneracy)
         self.Energies_SO.removeRow(Degeneracy)
         
-
         
-        """    
+        
+        self.fig = QApplication([])
+        
+        
+        
+        
+            
         ax1 = self.fig.add_subplot(221)
         ax1.eventplot(self.Ecf_val_excitation,orientation='horizontal',linelength=0.05,linestyles='solid',colors='r')
         ax1.tick_params(axis='x',which='both',bottom=False,top=False)
@@ -488,7 +492,7 @@ class App(QMainWindow):
         ax2.set_yticks([])
         ax2.set_title('Crystal Field excitations')
         ax2.set_ylim([0.95,1.05])
-        """
+        
 
 
 
